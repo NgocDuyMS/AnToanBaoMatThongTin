@@ -1,0 +1,97 @@
+#include<bits/stdc++.h>
+using namespace std ;
+#define ll long long 
+map<char,ll> khoa ;
+
+string bang_chu_thuong = "abcdefghijklmnopqrstuvwxyz" ;
+string bang_chu_hoa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+int n , m ;
+void xuli()
+{
+    int cnt = 0 ;
+     for(auto x:bang_chu_thuong)
+     {
+         mp[x] = cnt++ ;
+     }
+     cnt = 0 ; 
+     for(auto x:bang_chu_hoa)
+     {
+        mp[x] = cnt++ ;
+     }
+}
+char dich_chuyen(char c , ll k)
+{
+    if(isalpha(c))
+    {
+        if(isupper(c))
+        {
+            c = 'A' + ((c - 'A' + k) % mod + mod) % mod;
+        }
+        if(islower(c))
+        {
+            c = 'a' + ((c - 'a' +k) % mod +mod) % mod ;
+        }
+    }
+     if(isdigit(c))
+        {
+            c = '0' +((c - '0' + k) % mod1 + mod1) % mod1 ;
+        }
+    return c ;
+}
+string ma_hoa(string p ,string k)
+{
+    for(int i = 0 ; i<p.size() ; i++)
+    {
+        p[i] = dich_chuyen(p[i] , khoa[k[i]]) ;
+    }
+    return p ;
+}
+string giai_ma(string p ,string k)
+{
+    for(int i = 0 ; i<p.size() ; i++)
+    {
+        p[i]  = dich_chuyen(p[i] , -khoa[k[i]]) ;
+    }
+    return p ;    
+}
+
+string chuan_hoa(string p, string key) {
+    int n = p.size();
+    int m = key.size();
+    
+    if (n == m) {
+        return key;
+    } 
+    else if (m < n) {
+        string newkey;
+        newkey.reserve(n); // tối ưu hóa
+        for (int i = 0; i < n; i++) {
+            newkey += key[i % m];
+        }
+        return newkey;
+    } 
+    else { // m > n
+        return key.substr(0, n);
+    }
+}
+
+
+int main()
+{
+
+    string p ; // Đoạn văn bản cần mã hóa
+    getline(cin , p) ;
+    cout<<'\n' ; 
+    cout<<"Nhap khoa :" ;
+    string c ; //Đoạn văn bản dùng để làm khóa
+    // vigennere lặp khóa
+    getline(cin,c) ;
+    xuli() ;
+    string key = chuan_hoa(p,c) ;
+    string kq =  ma_hoa(p , key) ; 
+    cout << kq ;
+    cout << giai_ma(ma_hoa(p , key) ,key) ;
+    
+
+
+}
