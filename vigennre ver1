@@ -5,18 +5,19 @@ map<char,ll> khoa ;
 
 string bang_chu_thuong = "abcdefghijklmnopqrstuvwxyz" ;
 string bang_chu_hoa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
-int n , m ;
+int mod = 26 ; 
+int mod1 = 10 ;
 void xuli()
 {
     int cnt = 0 ;
      for(auto x:bang_chu_thuong)
      {
-         mp[x] = cnt++ ;
+         khoa[x] = cnt++ ;
      }
      cnt = 0 ; 
      for(auto x:bang_chu_hoa)
      {
-        mp[x] = cnt++ ;
+        khoa[x] = cnt++ ;
      }
 }
 char dich_chuyen(char c , ll k)
@@ -54,7 +55,6 @@ string giai_ma(string p ,string k)
     }
     return p ;    
 }
-
 string chuan_hoa(string p, string key) {
     int n = p.size();
     int m = key.size();
@@ -63,10 +63,9 @@ string chuan_hoa(string p, string key) {
         return key;
     } 
     else if (m < n) {
-        string newkey;
-        newkey.reserve(n); // tối ưu hóa
-        for (int i = 0; i < n; i++) {
-            newkey += key[i % m];
+        string newkey = key;
+        for (int i = m; i < n; i++) {
+            newkey += key[(i - m) % m];
         }
         return newkey;
     } 
@@ -90,8 +89,8 @@ int main()
     string key = chuan_hoa(p,c) ;
     string kq =  ma_hoa(p , key) ; 
     cout << kq ;
-    cout << giai_ma(ma_hoa(p , key) ,key) ;
-    
+    cout <<endl ;
+    cout << giai_ma(ma_hoa(p,key) , key) ;
 
 
 }
