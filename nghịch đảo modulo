@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long  
+
+int mod = 3739 ;
+
+// Euclid m? r?ng: tìm x, y sao cho a*x + b*y = gcd(a,b)
+int gcd(int a, int b, int& x, int& y) {
+    if (b == 0) {
+        x = 1; y = 0;
+        return a;
+    }
+    int x1, y1;
+    int d = gcd(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - y1 * (a / b);
+    return d;
+}
+
+// Ngh?ch d?o modulo (dùng Euclid m? r?ng)
+ll inverse(ll a, ll p) {
+    int x, y;
+    int g = gcd(a, p, x, y);
+    if (g != 1) {
+        cout << "Khong ton tai nghich dao modulo!\n";
+        return -1;
+    }
+    return (x % p + p) % p;
+}
+
+int main() {
+    ll a;
+    cin >> a ;
+    
+    ll inv = inverse(a, mod);
+    if (inv != -1)
+        cout << "Nghich dao cua a mod " << mod << " = " << inv << endl;
+
+    return 0;
+}
