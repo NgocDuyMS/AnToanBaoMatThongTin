@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+
+using namespace std ;
+#define ll long long  
+int mod = 6221 ; // Co the thay doi mod tuy y
+ll luy_thua(ll a , ll b)
+{
+	if(b == 0 )
+	{
+		return 1 ;
+	}
+	ll x =  luy_thua(a , b/2) ;
+	if(b%2==0)
+	{
+		return x%mod * x%mod  ;
+	}else{
+		return (x%mod * x%mod)%mod * a%mod ;
+	}
+}
+int main()
+{
+	ll a , m ; 
+	cin >> a >> m ;
+	ll kq = luy_thua(a , m) ; 
+	cout << kq << endl ;
+}
