@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+ll phi(ll n) {
+    ll kq = n;
+    for (ll p = 2; p * p <= n; p++) {
+        if (n % p == 0) {
+            while (n % p == 0) n /= p;
+            kq -= kq / p;
+        }
+    }
+    if (n > 1) kq -= kq / n;
+    return kq;
+}
+
+int main() {
+   int n ; 
+   cin >> n ; 
+   ll kq = phi(n)  ; 
+   cout << kq <<endl ;
+   
+}
