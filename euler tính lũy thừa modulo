@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+ll mod = 287;
+
+ll luy_thua(ll a, ll b) {
+    if (b == 0) return 1;
+    ll x = luy_thua(a, b / 2);
+    if (b % 2 == 0)
+        return ((x % mod) * (x % mod)) % mod;
+    else
+        return ((((x % mod) * (x % mod)) % mod) * (a % mod)) % mod;
+}
+
+ll phi(ll n) {
+    ll kq = n;
+    for (ll p = 2; p * p <= n; p++) {
+        if (n % p == 0) {
+            while (n % p == 0) n /= p;
+            kq -= kq / p;
+        }
+    }
+    if (n > 1) kq -= kq / n;
+    return kq;
+}
+
+ll gcd(ll a, ll b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+
+bool check(ll a, ll n) {
+    return gcd(a, n) == 1;
+}
+
+int main() {
+    ll a, m;
+    cin >> a >> m;
+
+    if (check(a, mod)) {
+        cout << luy_thua(a, m % phi(mod)) << "\n";
+    } else {
+        cout << luy_thua(a, m) << "\n";
+    }
+
+    return 0;
+}
