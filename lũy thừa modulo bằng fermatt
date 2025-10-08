@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+
+vector<bool> sang(1000001, true);
+
+void sang_so() {
+    sang[0] = sang[1] = false;
+    for (ll i = 2; i * i <= 1000000; i++) {
+        if (sang[i]) {
+            for (ll j = i * i; j <= 1000000; j += i) {
+                sang[j] = false;
+            }
+        }
+    }
+}
+
+// --- Hàm gcd ---
+ll gcd(ll a, ll b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+
+
+ll luy_thua(ll a, ll b, ll mod) {
+    if (b == 0) return 1;  
+    ll x = luy_thua(a, b / 2, mod); 
+    ll res = (x * x) % mod;         
+    if (b % 2 == 1)               
+        res = (res * (a % mod)) % mod;
+    return res;
+}
+
+// --- Hàm main ---
+int main() {
+  
+
+    ll a, m, n;
+    cout << "Nhap a: ";
+    cin >> a;
+    cout << "Nhap m (so mu): ";
+    cin >> m;
+    cout << "Nhap n (modulo): ";
+    cin >> n;
+
+    sang_so();
+
+    
+    if (gcd(a, n) == 1 && sang[n]) {
+        ll exp = m % (n - 1);
+        ll kq = luy_thua(a, exp, n);
+        cout << "Ket qua (ap dung dinh ly Fermat nho): " << kq << "\n";
+    } else {
+       
+        ll kq = luy_thua(a, m, n);
+        cout << "Ket qua (khong ap dung Fermat): " << kq << "\n";
+    }
+    //cout << sang[n] << endl ;
+    return 0;
+}
