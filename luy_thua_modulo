@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+// ======================== BU?C 1: PHÂN TÍCH MÔ-ÐUN ==========================
+vector<ll> tach_modulo(ll m) {
+    vector<ll> modulo;
+    ll can = sqrt(m);
+    for (ll i = 2; i <= can; i++) {
+        ll p = 1;
+        if (m % i == 0) {
+            while (m % i == 0) {
+                m /= i;
+                p *= i;
+            }
+            modulo.push_back(p);
+        }
+    }
+    if (m > 1) modulo.push_back(m);
+    return modulo;
+}
+
+ll luy_thua(ll a, ll b, ll mod) {
+    if (b == 0) return 1;
+    ll x = luy_thua(a, b / 2, mod);
+    if (b % 2 == 0)
+        return (x * x) % mod;
+    else
+        return (x * x % mod * a) % mod;
+}
+
+
+ll gcdExtended(ll a, ll b, ll &x, ll &y) {
+    if (b == 0) { x = 1; y = 0; return a; }
+    ll x1, y1;
+    ll g = gcdExtended(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - y1 * (a / b);
+    return g;
+}
+
+
+ll modInverse(ll a, ll m) {
+    ll x, y;
+    gcdExtended(a, m, x, y);
+    return (x % m + m) % m;
+}
+
+
+ll CRT(const vector<ll>& mods, const vector<ll>& rems) {
+    ll M = 1;
+    for (ll m : mods) M *= m; // mô-dun t?ng
+
+    ll x = 0;
+    for (int i = 0; i < mods.size(); i++) {
+        ll Mi = M / mods[i];
+        ll yi = modInverse(Mi, mods[i]);
+        x = (x + rems[i] * Mi % M * yi % M) % M;
+    }
+    return (x % M + M) % M;
+}
+
+
+int main() {
+    ll m, a, b;
+    cout << "Nhap m: ";
+    cin >> m;
+    cout << "Nhap 2 so a, b: ";
+    cin >> a >> b;
+
+    // B1: Tách mô-dun thành các thành ph?n
+    vector<ll> kq = tach_modulo(m);
+    cout << "Cac modulo con: ";
+    for (auto it : kq) cout << it << " ";
+    cout << endl;
+
+    // B2: Tính a^b mod m?i modulo con
+    vector<ll> luy_thua_nho;
+    cout << "Cac ket qua a^b mod m_i: ";
+    for (auto it : kq) {
+        ll p = luy_thua(a, b, it);
+        luy_thua_nho.push_back(p);
+        cout << p << " ";
+    }
+    cout << endl;
+
+    // B3: Áp d?ng CRT d? ghép k?t qu?
+    ll result = CRT(kq, luy_thua_nho);
+    cout << "Ket qua cuoi cung (a^b mod m): " << result << endl;
+}
