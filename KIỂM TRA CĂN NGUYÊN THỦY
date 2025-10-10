@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+using namespace std ;
+#define ll long long
+vector<ll> factor ;
+ll luy_thua(ll a , ll b , ll mod)
+{
+    if(b == 0)
+	{
+	   return 1 ; 	
+	}	
+	ll x = luy_thua(a , b/2 , mod) ;
+	if(b % 2 == 0)
+	{
+		return ((x%mod) * (x%mod)) % mod ;
+	}else{
+		return ((x%mod) * (x%mod)) %mod *(a%mod) ;
+	}
+} 
+ll phi(ll n)
+{
+	ll kq = n  ;
+	for(int p = 2 ; p*p <= n ;p++){
+		if(n % p ==0)
+		{
+			while(n % p == 0)
+			{
+				n /= p ;
+			}
+			kq -= kq/p ;
+		}
+	}
+	if(n > 1) kq -= kq/n ;
+	return kq ;
+}
+void phan_tich(ll phi)
+{
+	for(int p = 2 ; p*p <= phi ; p++)
+	{
+		if(phi % p == 0)
+		{
+			factor.push_back(p) ;
+			while(phi % p  == 0)
+			{
+				phi /= p ;
+			}
+		}
+	}
+	if(phi > 1) factor.push_back(phi) ;
+}
+bool check(vector<ll> factor , ll a, ll fi , ll mod)
+{
+	
+	for(auto it : factor)
+	{
+          ll b = fi / it ;
+          if(luy_thua(a , b , mod) == 1) return false ;
+	}
+	return true ;
+}
+int main()
+{
+	ll a , n ;
+	cout << "Nhap a va n:" ;
+	cin >> a >> n ;
+	ll fi = phi(n) ;
+	phan_tich(fi) ;
+	if(check(factor,a,fi ,n))
+	{
+		cout << "a la can nguyen thuy cua n" << endl ;
+	}else{
+		cout << "a khong la can nguyen thuy cua n" << endl ;
+	}
+	
+	return 0 ;
+	
+}
