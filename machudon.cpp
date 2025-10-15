@@ -7,10 +7,6 @@ using namespace std;
 
 
 string substitutionEncrypt(const string& plaintext, const string& key) {
-    // Kiểm tra xem khóa có đủ 26 ký tự không
-    if (key.length() != 26) {
-        throw invalid_argument("Loi: Khoa phai co du 26 ky tu.");
-    }
 
     string ciphertext = ""; // Chuỗi kết quả
 
