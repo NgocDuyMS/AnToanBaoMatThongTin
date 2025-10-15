@@ -1,53 +1,54 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <string>
 
-using namespace std ;
-#define ll long long 
-int mod = 26 ;
-int mod1 = 10 ;
-char dich_chuyen(char c , ll k)
-{
-    if(isalpha(c))
-    {
-        if(isupper(c))
-        {
-            c = 'A' + ((c - 'A' + k) % mod + mod) % mod;
-        }
-        if(islower(c))
-        {
-            c = 'a' + ((c - 'a' +k) % mod +mod) % mod ;
+
+
+using namespace std;
+
+
+string substitutionEncrypt(const string& plaintext, const string& key) {
+    // Kiểm tra xem khóa có đủ 26 ký tự không
+    if (key.length() != 26) {
+        throw invalid_argument("Loi: Khoa phai co du 26 ky tu.");
+    }
+
+    string ciphertext = ""; // Chuỗi kết quả
+
+    // Duyệt qua từng ký tự của văn bản gốc
+    for (char p_char : plaintext) {
+        // Kiểm tra ký tự có phải là chữ cái in hoa không
+        if (p_char >= 'A' && p_char <= 'Z') {
+            // Xác định vị trí của ký tự trong bảng chữ cái (từ 0 đến 25)
+            // Ví dụ: 'A' -> 0, 'B' -> 1, 'C' -> 2, ...
+            int position = p_char - 'A';
+
+            // Lấy ký tự tại vị trí tương ứng trong chuỗi key để thay thế
+            // Đây chính là logic cốt lõi của mã hóa thay thế
+            ciphertext += key[position];
+        } else {
+            // Nếu ký tự không phải chữ in hoa (ví dụ: số, dấu cách), giữ nguyên
+            ciphertext += p_char;
         }
     }
-    if(isdigit(c))
-    {
-        c = '0' + ((c - '0' +k) % mod1 +mod1) %mod1 ;
-    }
-    return c ;
+
+    return ciphertext;
 }
 
+int main() {
+  
+  
+    string message = "ONESWALLOWDOESNT";
+    string key = "WBXGIHOVSYMFUAKZJNCPQLTRED";
 
-int main()
-{
-    string p ;
-    cout << "Nhập văn bản :" ;
-    getline(cin , p) ;
-    string kq = "" ;
-    vector<ll> khoa ;
-    string kq2 = "" ;
-    for(int i = 0 ; i<p.size() ; i++)
-    {
-         ll k ; 
-         cout << "Nhập khóa:" ;
-         cin >> k ;
-         kq += dich_chuyen(p[i] ,k) ;
-         khoa.push_back(k) ;
-    }
-    cout <<"Văn bản mã hóa: "<<kq<<endl ;
-    for(int i = 0 ; i < p.size() ; i++)
-    {
-         kq2 += dich_chuyen(kq[i] ,-khoa[i]) ; 
-    }
-    cout << "Giải mã: " << kq2 ;
+    try {
+        string encryptedMessage = substitutionEncrypt(message, key);
+
+        // In kết quả ra màn hình
+        cout << "Van ban goc (M): " << message << endl;
+        cout << "Khoa         (K): " << key << endl;
+        cout << "-------------------------------------" << endl;
+        cout << "Van ban ma hoa (C): " << encryptedMessage << endl;
 
 
-
+    return 0;
 }
