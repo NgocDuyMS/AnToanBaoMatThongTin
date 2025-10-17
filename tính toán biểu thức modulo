@@ -1,0 +1,83 @@
+#include<bits/stdc++.h>
+
+using namespace std ; 
+#define ll long long
+int mod = 239 ;
+ll gcd(ll a, ll b, ll& x, ll& y) {
+    if (b == 0) {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    ll x1, y1;
+    ll d = gcd(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - y1 * (a / b);
+    return d;
+}
+ll luy_thua(ll a , ll b)
+{
+	if(b == 0 )
+	{
+		return 1 ;
+	}
+	ll x =  luy_thua(a , b/2) ;
+	if(b%2==0)
+	{
+		return x%mod * x%mod  ;
+	}else{
+		return (x%mod * x%mod)%mod * a%mod ;
+	}
+}
+ll ham_cong(ll a , ll b , ll x , ll y)
+{
+	return (luy_thua(a , x) + luy_thua(b , y)) % mod ;
+}
+ll ham_tru(ll a , ll b ,ll x ,ll y)
+{
+	return (luy_thua(a,x) - luy_thua(b,y)) % mod ;
+}
+ll ham_nhan(ll a , ll b , ll x , ll y)
+{
+	return (luy_thua(a,x) * luy_thua(b,y)) % mod ;
+}
+ll inverse(ll a , ll m)
+{
+	ll x , y ;
+	if(gcd(a,m,x,y) == 1)
+	{
+		return (x%m +m) % m ;
+	}else{
+		return 0  ;
+	}
+}
+ll nghichdao_modulo(ll b ,ll y)
+{
+	ll kq = luy_thua(b,y) ;
+	ll x , z ;
+	if(gcd(kq , mod , x, z) == 1)
+	{
+		return (x % mod +mod ) % mod ;
+	}else{
+		return 0 ;
+	}
+}
+ll ham_chia(ll a , ll b , ll x , ll y)
+{
+	 ll kq = nghichdao_modulo(b,y) ;
+	 return (luy_thua(a, x) * kq) % mod ;
+}
+int main()
+{
+	int a , b ,x , y ;
+	a = 71 ;
+	b = 83 ;
+	x = 596 ;
+	y = 375 ;
+	cout << "A1: " <<ham_cong(a,b,x,y)<<endl ;
+	cout << "A2: " <<ham_tru(a,b,x,y)<<endl ;
+	cout << "A3: " <<ham_nhan(a,b,x,y)<<endl ;
+	cout << "A4: " <<nghichdao_modulo(b,y)<<endl ;
+	cout << "A5: " <<ham_chia(a,b,x,y)<<endl ;
+	
+}
