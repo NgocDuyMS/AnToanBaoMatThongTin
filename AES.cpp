@@ -2,7 +2,7 @@
 using namespace std ;
 #define ll long long
 //Bai 1 : Chia khoa thanh 4 word w1 w2 w3 w4
-// B?ng S-box CHU?N cho m„ hÛa
+// B?ng S-box CHU?N cho m ha
 unsigned char sbox[16][16] = {
     {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
     {0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0},
@@ -21,7 +21,7 @@ unsigned char sbox[16][16] = {
     {0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
     {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}
 };
-// B?ng h?ng s? vÚng Rcon
+// B?ng h?ng s? vng Rcon
 unsigned int Rcon[10] = {
     0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000,
     0x20000000, 0x40000000, 0x80000000, 0x1b000000, 0x36000000
@@ -77,7 +77,7 @@ string XOR_words(string w1, string w2) {
 vector<string> khoa(string xcsw ,vector<string> word)
 {
 	 vector<string> kq ;
-	 string w4 = XOR_words(word[0], xcsw) ; // –„ s?a th? t? cho kh?p cÙng th?c
+	 string w4 = XOR_words(word[0], xcsw) ; //  s?a th? t? cho kh?p cng th?c
 	 kq.push_back(w4) ;
 	 string w5 = XOR_words(word[1], w4) ;
 	 kq.push_back(w5) ;
@@ -94,58 +94,50 @@ vector<string> khoa(string xcsw ,vector<string> word)
 
 using namespace std;
 
-void AddRoundKey(unsigned char state[4][4], const vector<string>& round_key) {
-    // L?p qua 4 c?t (c = 0, 1, 2, 3)
+// ‚úÖ ƒê√É S·ª¨A: D√πng tham chi·∫øu unsigned char (&state)[4][4]
+void AddRoundKey(unsigned char (&state)[4][4], const vector<string>& round_key) {
     for (int c = 0; c < 4; ++c) {
-        string key_word_str = round_key[c]; // L?y word c?a khÛa, vd: "AADE12F3"
+        string key_word_str = round_key[c];
         
-        // L?p qua 4 h‡ng trong m?i c?t (r = 0, 1, 2, 3)
         for (int r = 0; r < 4; ++r) {
-            // 1. C?t 2 k˝ t? hex (1 byte) t? word c?a khÛa
-            // VÌ d?: "AA", "DE", "12", "F3"
             string key_byte_str = key_word_str.substr(r * 2, 2);
-            
-            // 2. Chuy?n 2 k˝ t? hex dÛ th‡nh gi· tr? byte
             unsigned char key_byte_val = stoul(key_byte_str, nullptr, 16);
-            
-            // 3. Th?c hi?n XOR
             state[r][c] ^= key_byte_val;
         }
     }
 }
-// H‡m SubBytes phiÍn b?n don gi?n, khÙng d˘ng d?ch bit
-void SubBytes(unsigned char state[4][4]) {
+
+// ‚úÖ ƒê√É S·ª¨A: D√πng tham chi·∫øu unsigned char (&state)[4][4]
+//  gi·ªØ nguy√™n logic g·ªëc c·ªßa b·∫°n
+void SubBytes(unsigned char (&state)[4][4]) {
     for (int r = 0; r < 4; ++r) {
         for (int c = 0; c < 4; ++c) {
-            // 1. L?y gi· tr? byte hi?n t?i
             unsigned char byte_val = state[r][c];
 
-            // 2. Chuy?n byte dÛ th‡nh chu?i hex 2 k˝ t? (vÌ d?: 0xCF -> "CF")
             stringstream ss;
             ss << hex << setw(2) << setfill('0') << (int)byte_val;
             string hex_str = ss.str();
 
-            // 3. D˘ng 2 k˝ t? hex l‡m ch? s? h‡ng v‡ c?t
             int row = hex_char_to_int(hex_str[0]);
             int col = hex_char_to_int(hex_str[1]);
 
-            // 4. Tra S-box v‡ c?p nh?t l?i state
             state[r][c] = sbox[row][col];
         }
     }
 }
-// H‡m th?c hi?n ShiftRows
-void ShiftRows(unsigned char state[4][4]) {
+
+// ‚úÖ ƒê√É S·ª¨A: D√πng tham chi·∫øu unsigned char (&state)[4][4]
+void ShiftRows(unsigned char (&state)[4][4]) {
     unsigned char temp;
 
-    // H‡ng 1: d?ch vÚng tr·i 1 byte
+    // H√†ng 1: d·ªãch v√≤ng tr√°i 1 byte
     temp = state[1][0];
     state[1][0] = state[1][1];
     state[1][1] = state[1][2];
     state[1][2] = state[1][3];
     state[1][3] = temp;
 
-    // H‡ng 2: d?ch vÚng tr·i 2 byte
+    // H√†ng 2: d·ªãch v√≤ng tr√°i 2 byte
     temp = state[2][0];
     state[2][0] = state[2][2];
     state[2][2] = temp;
@@ -153,14 +145,14 @@ void ShiftRows(unsigned char state[4][4]) {
     state[2][1] = state[2][3];
     state[2][3] = temp;
 
-    // H‡ng 3: d?ch vÚng tr·i 3 byte (tuong duong d?ch ph?i 1 byte)
+    // H√†ng 3: d·ªãch v√≤ng tr√°i 3 byte (tuong duong d?ch ph?i 1 byte)
     temp = state[3][3];
     state[3][3] = state[3][2];
     state[3][2] = state[3][1];
     state[3][1] = state[3][0];
     state[3][0] = temp;
 }
-// H‡m ph? th?c hi?n phÈp nh‚n trong tru?ng GF(2^8)
+// H√†m ph·ª• th·ª±c hi·ªán ph√©p nh√¢n trong tr∆∞·ªùng GF(2^8)
 unsigned char gmul(unsigned char a, unsigned char b) {
     unsigned char p = 0;
     for (int i = 0; i < 8; i++) {
@@ -170,37 +162,39 @@ unsigned char gmul(unsigned char a, unsigned char b) {
         bool hi_bit_set = (a & 0x80);
         a <<= 1;
         if (hi_bit_set) {
-            a ^= 0x1b; // –a th?c x^8 + x^4 + x^3 + x + 1
+            a ^= 0x1b; // ƒêa th·ª©c x^8 + x^4 + x^3 + x + 1
         }
         b >>= 1;
     }
     return p;
 }
 
-// H‡m th?c hi?n MixColumns
-void MixColumns(unsigned char state[4][4]) {
+// ‚úÖ ƒê√É S·ª¨A: D√πng tham chi·∫øu unsigned char (&state)[4][4]
+void MixColumns(unsigned char (&state)[4][4]) {
     unsigned char temp[4];
     for (int c = 0; c < 4; ++c) {
-        // Sao chÈp c?t ra bi?n t?m
+        // Sao ch√©p c·ªôt ra bi·∫øn t·∫°m
         for (int r = 0; r < 4; ++r) {
             temp[r] = state[r][c];
         }
 
-        // Th?c hi?n phÈp nh‚n ma tr?n (d„ du?c d?nh nghia s?n)
+        // Th·ª±c hi·ªán ph√©p nh√¢n ma tr·∫≠n (ƒë√£ ƒë∆∞·ª£c ƒë·ªãnh nghƒ©a s·∫µn)
         state[0][c] = gmul(2, temp[0]) ^ gmul(3, temp[1]) ^ temp[2] ^ temp[3];
         state[1][c] = temp[0] ^ gmul(2, temp[1]) ^ gmul(3, temp[2]) ^ temp[3];
         state[2][c] = temp[0] ^ temp[1] ^ gmul(2, temp[2]) ^ gmul(3, temp[3]);
         state[3][c] = gmul(3, temp[0]) ^ temp[1] ^ temp[2] ^ gmul(2, temp[3]);
     }
 }
-void in(unsigned char state[4][4])
+
+// ‚úÖ ƒê√É S·ª¨A: D√πng tham chi·∫øu const unsigned char (&state)[4][4]
+void in(const unsigned char (&state)[4][4])
 {
-    for (int i = 0; i < 4; i++) // VÚng l?p h‡ng
+    for (int i = 0; i < 4; i++) // V√≤ng l·∫∑p h√†ng
     {
-        for (int j = 0; j < 4; j++) // VÚng l?p c?t
+        for (int j = 0; j < 4; j++) // V√≤ng l·∫∑p c·ªôt
         {
-            // ThÍm d?nh d?ng hexa v‡ Èp ki?u sang int
-            cout << hex <<uppercase<< setw(2) << setfill('0') << (int)state[i][j] << " ";
+            // Th√™m ƒë·ªãnh d·∫°ng hexa v√† √©p ki·ªÉu sang int
+            cout << hex << uppercase << setw(2) << setfill('0') << (int)state[i][j] << " ";
         }
         cout << endl;
     }
@@ -253,22 +247,22 @@ int main()
     // === BAT DAU PHAN CODE MOI ===
     
     for (int i = 1; i < 10; i++) {
-        vector<string> prev_key = key.back(); // L?y khÛa con tru?c dÛ (K1, K2,...)
+        vector<string> prev_key = key.back(); // L?y kha con tru?c d (K1, K2,...)
         
-        // T?o word t?m t? word cu?i (w[3]) c?a b? khÛa tru?c
+        // T?o word t?m t? word cu?i (w[3]) c?a b? kha tru?c
         string temp = sub_word(rot_word(prev_key[3]));
         
         // XOR word t?m v?i Rcon tuong ?ng
         string xcsw_loop = XOR_Rcon(temp, i);
         
-        // TÌnh 4 word m?i v‡ luu v‡o vector new_key
+        // Tnh 4 word m?i v luu vo vector new_key
         vector<string> new_key;
         new_key.push_back(XOR_words(prev_key[0], xcsw_loop));
         new_key.push_back(XOR_words(prev_key[1], new_key[0]));
         new_key.push_back(XOR_words(prev_key[2], new_key[1]));
         new_key.push_back(XOR_words(prev_key[3], new_key[2]));
         
-        // ThÍm b? khÛa m?i v‡o danh s·ch t?ng
+        // Thm b? kha m?i vo danh sch t?ng
         key.push_back(new_key);
     }
 
@@ -283,14 +277,14 @@ int main()
         cout << endl;
     }
     //Bai 6
-    // C¡CH S?A L?I
+    // CCH S?A L?I
    unsigned char state[4][4];
     for (int j = 0; j < 4; j++) // C?t
     {
-      for (int i = 0; i < 4; i++) // H‡ng
+      for (int i = 0; i < 4; i++) // Hng
        {
         int index = j * 4 + i;
-        // L?y chu?i con t? v? trÌ d„ tÌnh
+        // L?y chu?i con t? v? tr d tnh
         string tmp = M.substr(index * 2, 2);
         state[i][j] = stoul(tmp, nullptr, 16);
        }
@@ -303,17 +297,17 @@ int main()
         SubBytes(state);
         ShiftRows(state);
         MixColumns(state);
-        AddRoundKey(state, key[round - 1]); // key[0] l‡ K1, key[1] l‡ K2,...
+        AddRoundKey(state, key[round - 1]); // key[0] l K1, key[1] l K2,...
     }
 
-    // G?n gi?ng vÚng chÌnh nhung KH‘NG C” MixColumns
+    // G?n gi?ng vng chnh nhung KHNG C MixColumns
     cout << "\n--- Vong Cuoi Cung (10) ---" << endl;
     SubBytes(state);
     ShiftRows(state);
-    AddRoundKey(state, key[9]); // key[9] l‡ K10
+    AddRoundKey(state, key[9]); // key[9] l K10
 
     cout << "\n\n===== CIPHERTEXT (KET QUA MA HOA) =====" << endl;
-    in(state); 
+    in(state);	
 	
 	return 0;
 }
