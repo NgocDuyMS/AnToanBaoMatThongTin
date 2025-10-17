@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    int a = 3;
+    int b = 6;
+    int n = 19;
+
+    long long current_power = 1; // Bi?n d? luu giá tr? a^k mod n
+    bool found = false;
+
+    // Vòng l?p d? th? các giá tr? k t? 1 d?n n-1
+    for (int k = 1; k < n; ++k) {
+        current_power = (current_power * a) % n;
+
+        if (current_power == b) {
+            cout << "Tim thay k = " << k << endl;
+            found = true;
+            break; 
+        }
+    }
+
+    if (!found) {
+        cout << "Khong tim thay k." << endl;
+    }
+
+    return 0;
+}
