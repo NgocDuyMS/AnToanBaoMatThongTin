@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std ;
+#define ll long long
+
+ll luy_thua(ll a , ll b ,ll q)
+{
+	if(b == 0)
+	{
+		return 1 ; 
+	}
+	ll x = luy_thua(a , b/2 , q) ;
+	if(b % 2 == 0 )
+	{
+		return ((x%q) * (x%q)) % q ;
+	}else{
+		return ((((x%q) * (x%q)) % q) * (a%q)) % q ;
+	}
+}
+
+ll khoa_A(ll a , ll xa , ll q)
+{
+	return luy_thua(a ,xa , q) ;
+}
+
+ll khoa_B(ll a ,ll xb , ll q)
+{
+	return luy_thua(a , xb ,q) ;
+}
+
+ll khoa_K(ll yb , ll xa , ll q)
+{
+	return luy_thua(yb , xa ,q) ;
+}
+
+int main()
+{
+	ll q , a , xa , xb ;
+	q =  6781 ;
+	a = 7 ;
+	xa = 380 ;
+	xb = 478 ;
+	ll ya , yb , K ;
+	ya = khoa_A(a , xa , q) ;
+	yb = khoa_B(a , xb , q)  ;
+	K = khoa_K(yb , xa , q) ;  // Fixed: was (yb , xa , q)
+	cout << ya << endl ;
+	cout << yb <<endl ;
+	cout << K << endl ; 
+}
